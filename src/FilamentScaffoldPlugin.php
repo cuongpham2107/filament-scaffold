@@ -1,10 +1,10 @@
 <?php
 
-namespace Solutionforest\FilamentScaffold;
+namespace Cuongpham\FilamentScaffold;
 
+use Cuongpham\FilamentScaffold\Resources\ScaffoldResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 
 class FilamentScaffoldPlugin implements Plugin
 {

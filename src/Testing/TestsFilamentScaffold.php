@@ -1,6 +1,6 @@
 <?php
 
-namespace Solutionforest\FilamentScaffold\Testing;
+namespace Cuongpham\FilamentScaffold\Testing;
 
 use Livewire\Features\SupportTesting\Testable;
 

@@ -1,10 +1,10 @@
 # Filament Scaffold
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/solution-forest/filament-scaffold.svg?style=flat-square)](https://packagist.org/packages/solution-forest/filament-scaffold)
-[![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/filament-scaffold.svg?style=flat-square)](https://packagist.org/packages/solution-forest/filament-scaffold)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/cuongpham2107/filament-scaffold.svg?style=flat-square)](https://packagist.org/packages/cuongpham2107/filament-scaffold)
+[![Total Downloads](https://img.shields.io/packagist/dt/cuongpham2107/filament-scaffold.svg?style=flat-square)](https://packagist.org/packages/cuongpham2107/filament-scaffold)
 
 ## Description
-Filament scaffold is a toolkiit for Filament Admin that simplifies the generation of resources. It can automatically generate models, resources, migration files, and more, creating corresponding forms and table views based on the database table. Filament scaffold aims to speed up development and reduce the time spent writing repetitive code.
+Filament scaffold is a toolkit for Filament Admin v4.x that simplifies the generation of resources. It can automatically generate models, resources, migration files, and more, creating corresponding forms and table views based on the database table. This updated version supports Filament 4.1+ and Laravel 11.
 
 ## Features
 - Automatic Filament Resource Generation: Generates Filament resource files, including forms and table views, based on specified table names.
@@ -15,33 +15,38 @@ Filament scaffold is a toolkiit for Filament Admin that simplifies the generatio
 
 - Seamless Integration with Laravel and Filament: Utilizes Laravel's Artisan commands and Filament's extension mechanism for efficient resource management.
 
+## Requirements
+- PHP 8.2+
+- Laravel 11.x
+- Filament 4.1+
+
 ## Installation
 You can install the package via composer:
 ```bash
-composer require solution-forest/filament-scaffold
+composer require cuongpham2107/filament-scaffold
 ```
 
 Then, you need to connect to the database in the .env file.
 
-In your preject, app\Providers\Filament\xxxPanelProvider.php add this code:
-```bash
-use Solutionforest\FilamentScaffold\FilamentScaffoldPlugin;
+In your project, app\Providers\Filament\xxxPanelProvider.php add this code:
+```php
+use Cuongpham\FilamentScaffold\FilamentScaffoldPlugin;
 
 public function panel(Panel $panel): Panel
-    {
-        return $panel
-            ..., 
-            ->plugin(FilamentScaffoldPlugin::make());
-    }
+{
+    return $panel
+        // ... other configurations
+        ->plugin(FilamentScaffoldPlugin::make());
+}
 ```
 
 ## Publishing Configuration file
 To publish the configuration file, use:
 ```bash
-php artisan vendor:publish --provider="Solutionforest\FilamentScaffold\FilamentScaffoldServiceProvider" --tag="filament-scaffold-config"
+php artisan vendor:publish --provider="Cuongpham\FilamentScaffold\FilamentScaffoldServiceProvider" --tag="filament-scaffold-config"
 ```
-You can turn to false to unable the form.
-```bash
+You can set to false to disable the scaffold form.
+```php
 return [
     'enabled' => false,
 ];
@@ -76,9 +81,17 @@ Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
+## What's New in v4.x
+- Updated to support Filament 4.1+
+- Compatible with Laravel 11.x
+- Updated all dependencies to latest versions
+- Fixed deprecated APIs and methods
+- Improved PHP 8.2+ compatibility
+
 ## Credits
 
-- [celia514](https://github.com/solutionforest)
+- [cuongpham2107](https://github.com/cuongpham2107) - Filament 4.x update
+- [celia514](https://github.com/solutionforest) - Original package author
 - [All Contributors](../../contributors)
 
 ## License

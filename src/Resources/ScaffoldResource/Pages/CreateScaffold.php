@@ -1,12 +1,12 @@
 <?php
 
-namespace Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
+namespace Cuongpham\FilamentScaffold\Resources\ScaffoldResource\Pages;
 
+use Cuongpham\FilamentScaffold\Models\Scaffold;
+use Cuongpham\FilamentScaffold\Resources\ScaffoldResource;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\HtmlString;
-use Solutionforest\FilamentScaffold\Models\Scaffold;
-use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 
 class CreateScaffold extends CreateRecord
 {
@@ -39,7 +39,7 @@ class CreateScaffold extends CreateRecord
             ->modalSubmitActionLabel('Yes, Confirm')
             ->modalCancelActionLabel('No, Cancel')
             ->modalIcon('heroicon-o-exclamation-triangle')
-            ->modalIconColor('warning')
+            ->color('warning')
             ->action(fn () => $this->create())
             ->keyBindings(['mod+s']);
     }

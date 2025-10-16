@@ -2,6 +2,48 @@
 
 All notable changes to `filament-scaffold` will be documented in this file.
 
+## 1.0.0 - 2025-10-16
+
+### Added
+- **Filament 4.1 Support**: Updated package to support Filament 4.1+ 
+- **Laravel 11 Compatibility**: Full compatibility with Laravel 11.x
+- **PHP 8.2+ Support**: Updated minimum PHP requirement to 8.2
+- **Updated Dependencies**: All dependencies updated to latest stable versions
+- **Namespace Change**: Changed namespace from `Solutionforest\FilamentScaffold` to `Cuongpham\FilamentScaffold`
+
+### Changed
+- Replaced deprecated `reactive()` with `live()` method in form components
+- Updated `modalIconColor()` to `color()` for action buttons
+- Updated PHPStan to v2.x
+- Updated Pest to v3.x
+- Replaced abandoned `nunomaduro/larastan` with `larastan/larastan`
+- Updated Symfony components to v7.x
+
+### Breaking Changes
+- Minimum PHP version is now 8.2
+- Requires Filament 4.1+
+- Requires Laravel 11.x
+- Package namespace changed
+
+### Migration Guide
+Update your `composer.json`:
+```json
+{
+    "require": {
+        "cuongpham2107/filament-scaffold": "^1.0"
+    }
+}
+```
+
+Update your Panel Provider:
+```php
+// Old
+use Solutionforest\FilamentScaffold\FilamentScaffoldPlugin;
+
+// New  
+use Cuongpham\FilamentScaffold\FilamentScaffoldPlugin;
+```
+
 ## 0.0.10 - 2025-07-28
 
 ### What's Changed

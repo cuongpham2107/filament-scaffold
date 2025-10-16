@@ -1,17 +1,23 @@
 <?php
 
-namespace Solutionforest\FilamentScaffold\Resources;
+namespace Cuongpham\FilamentScaffold\Resources;
 
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Set;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
+use Cuongpham\FilamentScaffold\Resources\ScaffoldResource\Pages;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Grid;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
 
 if (! defined('STDIN')) {
     define('STDIN', fopen('php://stdin', 'r'));
@@ -41,20 +47,20 @@ class ScaffoldResource extends Resource
      */
     protected static ?string $modelLabel = 'Scaffold';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
 
                 /********************************************
                  * TABLE NAME, MODEL NAME, RESOURCE NAME
                  */
-                Forms\Components\Section::make('Table & Resource Information')
+                Section::make('Table & Resource Information')
                     ->schema([
-                        Forms\Components\Grid::make(2)
+                        Grid::make(2)
                             ->schema([
 
-                                Forms\Components\TextInput::make('Table Name')
+                                TextInput::make('Table Name')
                                     ->reactive()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function (Set $set, $state) {
@@ -65,7 +71,7 @@ class ScaffoldResource extends Resource
                                     })
                                     ->required(),
 
-                                Forms\Components\Select::make('Choose Table')
+                                Select::make('Choose Table')
                                     ->options(self::getAllTableNames())
                                     ->reactive()
                                     ->afterStateUpdated(function (Set $set, $state) {
@@ -85,12 +91,12 @@ class ScaffoldResource extends Resource
                                     }),
                             ]),
 
-                        Forms\Components\Grid::make(2)
+                        Grid::make(2)
                             ->schema([
-                                Forms\Components\TextInput::make('Model')
+                                TextInput::make('Model')
                                     ->default('app\\Models\\')
                                     ->live(onBlur: true),
-                                Forms\Components\TextInput::make('Resource')
+                                TextInput::make('Resource')
                                     ->default('app\\Filament\\Resources\\')
                                     ->live(onBlur: true),
                             ]),
@@ -100,24 +106,24 @@ class ScaffoldResource extends Resource
                 /********************************************
                  * GENERATION OPTIONS
                  */
-                Forms\Components\Section::make('Generation Options')
+                Section::make('Generation Options')
                     ->schema([
-                        Forms\Components\Checkbox::make('Create Resource')
+                        Checkbox::make('Create Resource')
                             ->default(true),
-                        Forms\Components\Checkbox::make('Create Model')
+                        Checkbox::make('Create Model')
                             ->default(true),
-                        Forms\Components\Checkbox::make('Simple Resource')
+                        Checkbox::make('Simple Resource')
                             ->default(false)
                             ->label('Simple (Modal Type) Resource'),
-                        Forms\Components\Checkbox::make('Create Migration'),
-                        Forms\Components\Checkbox::make('Create Factory'),
-                        Forms\Components\Checkbox::make('Create Controller'),
-                        Forms\Components\Checkbox::make('Run Migrate'),
-                        Forms\Components\Checkbox::make('Create Route'),
-                        Forms\Components\Checkbox::make('Create Policy')
+                        Checkbox::make('Create Migration'),
+                        Checkbox::make('Create Factory'),
+                        Checkbox::make('Create Controller'),
+                        Checkbox::make('Run Migrate'),
+                        Checkbox::make('Create Route'),
+                        Checkbox::make('Create Policy')
                             ->default(false)
                             ->hidden(fn () => ! class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)),
-                        Forms\Components\Checkbox::make('create_api')
+                        Checkbox::make('create_api')
                             ->label('Create API')
                             ->default(false)
                             ->hidden(fn () => ! class_exists(\Rupadana\ApiService\ApiService::class)),
@@ -129,16 +135,16 @@ class ScaffoldResource extends Resource
                 /********************************************
                  * TABLE STRUCTURE
                  */
-                Forms\Components\Section::make('Table Structure')
+                Section::make('Table Structure')
                     ->schema([
-                        Forms\Components\Repeater::make('Table')
+                        Repeater::make('Table')
                             ->schema([
-                                Forms\Components\TextInput::make('name')
+                                TextInput::make('name')
                                     ->label('Field Name')
                                     ->required()
                                     ->default(fn ($record) => $record['name'] ?? ''),
-                                Forms\Components\TextInput::make('translation'),
-                                Forms\Components\Select::make('type')
+                                TextInput::make('translation'),
+                                Select::make('type')
                                     ->native(false)
                                     ->searchable()
                                     ->options([
@@ -169,10 +175,10 @@ class ScaffoldResource extends Resource
                                     ])
                                     ->default(fn ($record) => $record['type'] ?? 'string')
                                     ->reactive(),
-                                Forms\Components\Checkbox::make('nullable')
+                                Checkbox::make('nullable')
                                     ->inline(false)
                                     ->default(fn ($record) => $record['nullable'] ?? false),
-                                Forms\Components\Select::make('key')
+                                Select::make('key')
                                     ->default('')
                                     ->options([
                                         '' => 'NULL',
@@ -181,9 +187,9 @@ class ScaffoldResource extends Resource
                                         'index' => 'Index',
                                     ])
                                     ->default(fn ($record) => $record['key'] ?? ''),
-                                Forms\Components\TextInput::make('default')
+                                TextInput::make('default')
                                     ->default(fn ($record) => $record['default'] ?? ''),
-                                Forms\Components\Textarea::make('comment')
+                                Textarea::make('comment')
                                     ->autosize()
                                     ->default(fn ($record) => $record['comment'] ?? ''),
                             ])
@@ -194,13 +200,13 @@ class ScaffoldResource extends Resource
                 /********************************************
                  * MIGRATION ADDITIONAL FEATURES
                  */
-                Forms\Components\Section::make('Migration Additional Features')
+                Section::make('Migration Additional Features')
                     ->schema([
-                        Forms\Components\Checkbox::make('Created_at & Updated_at')
+                        Checkbox::make('Created_at & Updated_at')
                             ->label('Created_at & Updated_at timestamps')
                             ->default(true)
                             ->inline(),
-                        Forms\Components\Checkbox::make('Soft Delete')
+                        Checkbox::make('Soft Delete')
                             ->label('Soft Delete (recycle bin)')
                             ->default(true)
                             ->inline(),
@@ -423,11 +429,11 @@ class ScaffoldResource extends Resource
                             ->body('A new policy file has been successfully created for your model. Please configure the permissions for the new policy.')
                             ->icon('heroicon-o-shield-check')
                             ->actions([
-                                \Filament\Notifications\Actions\Action::make('view')
+                                \Filament\Actions\Action::make('view')
                                     ->label('Configure Permissions')
                                     ->button()
                                     ->url($url, shouldOpenInNewTab: true),
-                                \Filament\Notifications\Actions\Action::make('close')
+                                \Filament\Actions\Action::make('close')
                                     ->color('gray')
                                     ->close(),
                             ])
@@ -661,7 +667,7 @@ class ScaffoldResource extends Resource
     {
         $fields = [];
         foreach ($data['Table'] as $column) {
-            $fields[] = "Forms\Components\TextInput::make('{$column['name']}')->required()";
+            $fields[] = "TextInput::make('{$column['name']}')->required()";
         }
 
         return implode(",\n", $fields);

@@ -1,11 +1,11 @@
 <?php
 
-namespace Solutionforest\FilamentScaffold;
+namespace Cuongpham\FilamentScaffold;
 
+use Cuongpham\FilamentScaffold\Testing\TestsFilamentScaffold;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
 use Livewire\Features\SupportTesting\Testable;
-use Solutionforest\FilamentScaffold\Testing\TestsFilamentScaffold;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -46,7 +46,7 @@ class FilamentScaffoldServiceProvider extends PackageServiceProvider
 
     protected function getAssetPackageName(): ?string
     {
-        return 'solution-forest/filament-scaffold';
+        return 'cuongpham/filament-scaffold';
     }
 
     /**

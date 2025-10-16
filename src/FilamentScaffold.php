@@ -1,5 +1,5 @@
 <?php
 
-namespace Solutionforest\FilamentScaffold;
+namespace Cuongpham\FilamentScaffold;
 
 class FilamentScaffold {}
