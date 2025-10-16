@@ -18,6 +18,8 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
+use UnitEnum;
+use BackedEnum;
 
 if (! defined('STDIN')) {
     define('STDIN', fopen('php://stdin', 'r'));
@@ -25,13 +27,13 @@ if (! defined('STDIN')) {
 
 class ScaffoldResource extends Resource
 {
-    protected static ?string $navigationIcon = 'heroicon-o-cube-transparent';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-cube-transparent';
 
     /********************************************
      * Group name in the 'navigation bar'
      * @var string|null
      */
-    protected static ?string $navigationGroup = 'System';
+    protected static UnitEnum|string|null $navigationGroup = 'System';
 
     /********************************************
      * Plural label for the resource
