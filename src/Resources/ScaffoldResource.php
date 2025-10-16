@@ -21,13 +21,13 @@ use Filament\Forms\Components\Textarea;
 use UnitEnum;
 use BackedEnum;
 
-if (! defined('STDIN')) {
+if (!defined('STDIN')) {
     define('STDIN', fopen('php://stdin', 'r'));
 }
 
 class ScaffoldResource extends Resource
 {
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-cube-transparent';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cube-transparent';
 
     /********************************************
      * Group name in the 'navigation bar'
@@ -79,7 +79,7 @@ class ScaffoldResource extends Resource
                                     ->afterStateUpdated(function (Set $set, $state) {
                                         $allTables = self::getAllTableNames();
 
-                                        if (! isset($allTables[$state])) {
+                                        if (!isset($allTables[$state])) {
                                             return;
                                         }
 
@@ -124,11 +124,11 @@ class ScaffoldResource extends Resource
                         Checkbox::make('Create Route'),
                         Checkbox::make('Create Policy')
                             ->default(false)
-                            ->hidden(fn () => ! class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)),
+                            ->hidden(fn() => !class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)),
                         Checkbox::make('create_api')
                             ->label('Create API')
                             ->default(false)
-                            ->hidden(fn () => ! class_exists(\Rupadana\ApiService\ApiService::class)),
+                            ->hidden(fn() => !class_exists(\Rupadana\ApiService\ApiService::class)),
 
                     ])
                     ->columns(2)
@@ -144,7 +144,7 @@ class ScaffoldResource extends Resource
                                 TextInput::make('name')
                                     ->label('Field Name')
                                     ->required()
-                                    ->default(fn ($record) => $record['name'] ?? ''),
+                                    ->default(fn($record) => $record['name'] ?? ''),
                                 TextInput::make('translation'),
                                 Select::make('type')
                                     ->native(false)
@@ -175,11 +175,11 @@ class ScaffoldResource extends Resource
                                         'ipAddress' => 'ipAddress',
                                         'macAddress' => 'macAddress',
                                     ])
-                                    ->default(fn ($record) => $record['type'] ?? 'string')
+                                    ->default(fn($record) => $record['type'] ?? 'string')
                                     ->reactive(),
                                 Checkbox::make('nullable')
                                     ->inline(false)
-                                    ->default(fn ($record) => $record['nullable'] ?? false),
+                                    ->default(fn($record) => $record['nullable'] ?? false),
                                 Select::make('key')
                                     ->default('')
                                     ->options([
@@ -188,12 +188,12 @@ class ScaffoldResource extends Resource
                                         'unique' => 'Unique',
                                         'index' => 'Index',
                                     ])
-                                    ->default(fn ($record) => $record['key'] ?? ''),
+                                    ->default(fn($record) => $record['key'] ?? ''),
                                 TextInput::make('default')
-                                    ->default(fn ($record) => $record['default'] ?? ''),
+                                    ->default(fn($record) => $record['default'] ?? ''),
                                 Textarea::make('comment')
                                     ->autosize()
-                                    ->default(fn ($record) => $record['comment'] ?? ''),
+                                    ->default(fn($record) => $record['comment'] ?? ''),
                             ])
                             ->columns(7),
                     ])
@@ -221,9 +221,32 @@ class ScaffoldResource extends Resource
 
     public static function getAllTableNames(): array
     {
-        $tables = DB::select('SHOW TABLES');
+        $conn = DB::connection();
+        $driver = $conn->getDriverName();
 
-        return array_map('current', $tables);
+        if ($driver === 'sqlite') {
+            $tables = $conn->select("
+            SELECT name
+            FROM sqlite_master
+            WHERE type = 'table'
+              AND name NOT LIKE 'sqlite_%'
+        ");
+            return array_map(fn($t) => $t->name, $tables);
+        } elseif ($driver === 'mysql') {
+            $tables = $conn->select('SHOW TABLES');
+            return array_map('current', $tables);
+        } elseif ($driver === 'pgsql') {
+            $tables = $conn->select("
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+              AND table_type = 'BASE TABLE'
+        ");
+            return array_map(fn($t) => $t->table_name, $tables);
+        } else {
+            // Trường hợp chưa xử lý, trả về mảng rỗng hoặc bạn có thể ném ngoại lệ
+            return [];
+        }
     }
 
     public static function getTableColumns($tableName)
@@ -720,7 +743,7 @@ class ScaffoldResource extends Resource
     public static function generateUp(array $data): string
     {
         $fields = array_map(
-            fn (array $column): string => self::generateColumnDefinition($column),
+            fn(array $column): string => self::generateColumnDefinition($column),
             $data['Table']
         );
 
@@ -740,10 +763,10 @@ class ScaffoldResource extends Resource
         $definition = "\$table->{$column['type']}('{$column['name']}')";
 
         $methods = [
-            'nullable' => fn (): bool => $column['nullable'] ?? false,
-            'default' => fn (): ?string => $column['default'] ?? null,
-            'comment' => fn (): ?string => $column['comment'] ?? null,
-            'key' => fn (): ?string => $column['key'] ?? null,
+            'nullable' => fn(): bool => $column['nullable'] ?? false,
+            'default' => fn(): ?string => $column['default'] ?? null,
+            'comment' => fn(): ?string => $column['comment'] ?? null,
+            'key' => fn(): ?string => $column['key'] ?? null,
         ];
 
         foreach ($methods as $method => $condition) {
@@ -856,7 +879,7 @@ class ScaffoldResource extends Resource
     {
 
         // --- Check if FilamentShield is installed
-        if (! class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)) {
+        if (!class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)) {
             return;
         }
 
